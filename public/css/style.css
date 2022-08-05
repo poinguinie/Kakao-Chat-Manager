@@ -1,0 +1,180 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Gugi&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&display=swap');
+
+:root {
+    --main-color : #ffe812;
+}
+
+* {
+    font-family: 'Nanum Gothic';
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: auto 0;
+    width: 100%;
+}
+
+.wrapper {
+    padding: 0 100px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.Header {
+    height: 12vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: row;
+}
+
+.Header .logo {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.Header .logo img {
+	max-width: 64px;
+	max-height : 64px;
+	margin-right: 12px;
+}
+
+.Header .logo h2 {
+    font-size: 2rem;
+}
+
+.Header .logo h2 b {
+    color: black;
+    background-color: var(--main-color);
+}
+
+.Header .info {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+.Header .info:hover {
+	background-color: #DADADA;
+}
+
+.Header .info img {
+	margin: 4px;
+}
+
+.Header .info span {
+	margin: 4px;
+}
+
+.Content {
+    display: flex;
+    flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.Content .file-upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 40px;
+}
+
+.filebox {
+    display: flex;
+    align-items: center;
+}
+
+.filebox .upload-name {
+    display: inline-block;
+    height: 40px;
+    padding: 0 10px;
+    vertical-align: middle;
+    border: 1px solid #dddddd;
+    width: 400px;
+    color: #999999;
+}
+
+.filebox label, .filebox button {
+    font-size: 1rem;
+    font-weight: 600;
+    border: 1.5px solid black;
+    background-color: black;
+    color: var(--main-color);
+    width: 100px;
+    height: 40px;
+    padding: 10px 10px;
+    text-align: center;
+    vertical-align: middle;
+    margin: 0 12px;
+    cursor: pointer;
+}
+
+.filebox label:hover, .filebox button:hover {
+    transition: 0.25s;
+    border: 1.5px solid white;
+	border-top: 1.5px solid black;
+	border-bottom: 1.5px solid black;
+    background-color: white;
+    color: black;
+}
+
+.file-upload-box span {
+	position: absolute;
+	display: block;
+}
+
+.file-upload-box span:nth-child(1) {
+	top: 0;
+	left: -100%;
+}
+
+
+.filebox input[type="file"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+}
+
+.Content .result {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 90%;
+}
+
+.Content .result table {
+	margin: 24px;
+	width: 60%;
+}
+.Content .result table tr {
+	border-bottom: 1px solid #E5E5E5;
+	margin: 4px;
+	border: 1px solid black;
+}
+.Content .result table tr:first-child {
+	font-size: 1.4rem;
+	margin-top: 12px;
+	margin-bottom: 12px;
+}
+.Content .result table tr:last-child {
+	border-bottom: none;
+}
+.Content .result table tr td {
+	margin: 12px;
+}
+.Content .result table tr td:nth-child(2), .Content .result table tr td:nth-child(3), .Content .result table tr td:nth-child(4) {
+	text-align: center;
+}

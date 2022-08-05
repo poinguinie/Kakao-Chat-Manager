@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카카오 채팅방 매니저</title>
+    <script
+	  src="https://code.jquery.com/jquery-3.6.0.min.js"
+	  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+	  crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="./css/style.css">
+	<script>
+		function dateToString(date) {
+			return date.getFullYear() + '년 ' + (date.getMonth() + 1 >= 10 ? (date.getMonth() + 1) : ('0' +( date.getMonth() + 1))) + '월 ' + (date.getDate() >= 10 ? date.getDate() : ('0' + date.getDate())) + '일 '; 
+		}
+		function timeToString(time) {
+			if(time.includes('오전')) {
+				var timeList = time.slice(3).split(':');
+				var hour = parseInt(timeList[0]);
+				var minute = parseInt(timeList[1]);
+				return `${(hour >= 10 ? hour : '0' + hour)}시 ${minute >= 10 ? minute : '0' + minute}분`;
+			} else {
+				var timeList = time.slice(3).split(':');
+				var hour = parseInt(timeList[0]) + 12;
+				var minute = parseInt(timeList[1]);
+				return `${(hour >= 10 ? hour : '0' + hour)}시 ${minute >= 10 ? minute : '0' + minute}분`;
+			}
+		}
+		$(function() {
+			$('.filebox button').on('click', () => {
+				if($(".result").html().trim() !== "") {
+					let isDeleted = confirm("내역을 지우시겠습니까?");
+					if (isDeleted) $(".result").html("");
+					else return;
+				}
+				const txtInput = $('#txtInput')[0];
+				// console.log(txtInput.files[0]);
+				
+				if (txtInput.files.length === 0) {
+					alert('파일을 첨부하여 주세요');
+					return;
+				} 
+				
+				const formData = new FormData();
+				formData.append('file', txtInput.files[0]);
+				
+				// console.log(formData.values());
+				
+				$.ajax({
+					url: '/file/upload',
+					type: 'POST',
+					dataType: 'JSON',
+					data: formData,
+					processData: false,
+					contentType: false,
+					success: function(result) {
+						// result : 
+						// code : success | err
+						// result : {
+						// chattingRoom : {name, saveDate},
+						// people : [
+						// {name, count, lastChatDate, enterDate, leftDate}
+						// ]}
+						// console.log(result.result.people.length);
+						
+						const people = result.result.people.filter(person=>person.leftDate == '');
+						
+						const sortedPeople = people.sort((p1, p2) => new Date(p1.lastChatDate.date) - new Date(p2.lastChatDate.date));
+						
+						// console.log(sortedPeople);
+						
+						// console.log(people.length);
+						
+						var table = $("<table />");
+						var th = $("<tr />");
+						th.append($("<th />").text("이름"));
+						th.append($("<th />").text("채팅 수"));
+						th.append($("<th />").text("마지막 채팅 날짜"));
+						th.append($("<th />").text("들어온 날짜"));
+						table.append(th);
+						for(const person of sortedPeople) {
+							// console.log(person);
+							var tr = $("<tr />");
+							tr.append($("<td />").text(person.name));
+							tr.append($("<td />").text(person.count));
+							tr.append($("<td />").text(dateToString(new Date(person.lastChatDate.date)) + ' ' + timeToString(person.lastChatDate.time)));
+							tr.append($("<td />").text(person.enterDate != '' ? dateToString(new Date(person.enterDate)) : ''));
+							
+							/*tr += '<td>' + person.name +'</td>';
+							tr += '<td>' + person.count+'</td>';
+							tr += '<td>' + dateToString(new Date(person.lastChatDate.date)) + ' ' + timeToString(person.lastChatDate.time) +'</td>';
+							tr += '<td>' + (person.enterDate != '' ? dateToString(new Date(person.enterDate)) : '') +'</td></tr>';*/
+							table.append(tr);
+						}
+						$(".result").append(table).trigger('create');
+					},
+					error: function(req, status, err) {
+						console.dir(req);
+						console.dir(status);
+						console.dir(err);
+					}
+				});
+			});
+		});
+	</script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="Header">
+			<div class="logo">
+				<img src="./images/kakao.svg">
+            	<h2><b>카카오 채팅방</b> 매니저</h2>
+			</div>
+			<div class="info">
+				<img src='./images/info.svg'>
+				<span>
+					사용법
+				</span>
+			</div>
+        </div>
+        <div class="Content">
+            <div class="file-upload">
+                <form id="file-form" enctype="multipart/form-data">
+                    <div class="filebox">
+                        <input class="upload-name" value="첨부파일" placeholder="첨부파일" disabled>
+						<div class="file-upload-box">
+							<label for="txtInput">파일 첨부</label>
+						</div>
+                        <input type="file" name="txtInput" id="txtInput" accept=".txt">|
+						<button type="button">채팅 분석</button>
+                    </div>
+                </form>
+            </div>
+            <hr>
+            <div class="result">
+				
+            </div>
+        </div>
+        <div class="Footer">
+    
+        </div>
+    </div>
+    <script src="./js/main.js"></script>
+</body>
+</html>
